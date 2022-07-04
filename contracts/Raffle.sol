@@ -59,7 +59,7 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
         i_subscriptionId = subscriptionId;
         i_entranceFee = entranceFee;
         s_raffleState = RaffleState.OPEN;
-        s_lastTimeStamp = block.timestamp;
+        s_lastTimeStamp = block.timestamp; // unix epoch
         i_callbackGasLimit = callbackGasLimit;
     }
 
@@ -72,7 +72,7 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
         if (s_raffleState != RaffleState.OPEN) {
             revert Raffle__RaffleNotOpen();
         }
-        s_players.push(payable(msg.sender));
+        s_players.push(payable(msg.sender)); // pushes player's address to the players array
         // Emit an event when we update a dynamic array or mapping
         // Named events with the function name reversed
         emit RaffleEnter(msg.sender);
@@ -101,9 +101,9 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
         bool isOpen = RaffleState.OPEN == s_raffleState;
         bool timePassed = ((block.timestamp - s_lastTimeStamp) > i_interval);
         bool hasPlayers = s_players.length > 0;
-        bool hasBalance = address(this).balance > 0;
+        bool hasBalance = address(this).balance > 0; // this refers to the contract instance object of our contract, along with explicit conversion to address type
         upkeepNeeded = (timePassed && isOpen && hasBalance && hasPlayers);
-        return (upkeepNeeded, "0x0"); // can we comment this out?
+        return (upkeepNeeded, "0x0"); // equivalent to []
     }
 
     /**
@@ -123,14 +123,14 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
             );
         }
         s_raffleState = RaffleState.CALCULATING;
-        uint256 requestId = i_vrfCoordinator.requestRandomWords(
+        uint256 requestId = i_vrfCoordinator.requestRandomWords( // Chainlink VRF call
             i_gasLane,
             i_subscriptionId,
             REQUEST_CONFIRMATIONS,
             i_callbackGasLimit,
             NUM_WORDS
         );
-        // Quiz... is this redundant?
+        // Quiz... is this redundant? (It is! Refer to the VRF call)
         emit RequestedRaffleWinner(requestId);
     }
 
@@ -143,8 +143,7 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
         uint256[] memory randomWords
     ) internal override {
         // s_players size 10
-        // randomNumber 202
-        // 202 % 10 ? what's doesn't divide evenly into 202?
+        // randomNumber 202  
         // 20 * 10 = 200
         // 2
         // 202 % 10 = 2
