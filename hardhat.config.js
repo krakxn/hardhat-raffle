@@ -9,18 +9,17 @@ require("dotenv").config()
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
-
 // const MAINNET_RPC_URL = process.env.MAINNET_RPC_URL || process.env.ALCHEMY_MAINNET_RPC_URL
 const RINKEBY_RPC_URL = process.env.RINKEBY_RPC_URL
 const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL
 // const POLYGON_MAINNET_RPC_URL = process.env.POLYGON_MAINNET_RPC_URL
 const PRIVATE_KEY = process.env.PRIVATE_KEY
-// optional
+// const POLYGONSCAN_API_KEY = process.env.POLYGONSCAN_API_KEY
+// Optional:
 // const MNEMONIC = process.env.MNEMONIC
 
 // Your API key for Etherscan, obtain one at https://etherscan.io/
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
-// const POLYGONSCAN_API_KEY = process.env.POLYGONSCAN_API_KEY
 const REPORT_GAS = process.env.REPORT_GAS || false
 
 module.exports = {
@@ -39,7 +38,7 @@ module.exports = {
         goerli: {
             url: GOERLI_RPC_URL,
             accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
-            //accounts: {
+            //   accounts: {
             //     mnemonic: MNEMONIC,
             // },
             saveDeployments: true,
@@ -91,8 +90,8 @@ module.exports = {
     },
     namedAccounts: {
         deployer: {
-            default: 0, // here this will by default take the first account as deployer
-            1: 0, // similarly on mainnet it will take the first account as deployer. Note though that depending on how hardhat network are configured, the account 0 on one network can be different than on another
+            default: 0, // Here, this will by default take the first account as deployer
+            1: 0, // Similarly, on mainnet it will take the first account as deployer. Note though that depending on how hardhat network are configured, the account 0 on one network can be different than on another
         },
         player: {
             default: 1,
